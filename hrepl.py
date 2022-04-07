@@ -177,3 +177,9 @@ def debug(o):
 
 HIVEFN = "/media/noob/ACER320/Users/ACER/NTUSER.DAT"
 H = hivex.Hivex(HIVEFN)
+
+def main():
+    '''    wepl(Treewalk(unroot(HIVEFN)))    '''
+    r = unroot(HIVEFN)
+    t = Treewalk(r)
+    wepl(t)
