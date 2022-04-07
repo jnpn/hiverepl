@@ -54,6 +54,9 @@ class Node(Tree):
     def node(self):
         return self.inode
 
+    def from_inode(self, inode):
+        return Node(inode, self.hive())
+
     def children(self):
         H = self.hive()
         return [Node(n, self.hive()) for n in H.node_children(self.node())]
