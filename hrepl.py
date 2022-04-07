@@ -73,7 +73,9 @@ class Node(Tree):
 
     def __repr__(self):
         # name, leaf|node[, type, value]
+        lim = 16
         name = self.hive().node_name(self.node())
+        name = name if len(name) < lim else name[:14] + '...'
         num = self.node()
         kind = '.' if self.is_leaf() else ''
         return f'{name} {num}{kind}'
