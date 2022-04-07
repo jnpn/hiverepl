@@ -13,23 +13,29 @@ repl/s path &rest {
   : S   seek*
 }
 '''
+import abc
 import hivex
 import datetime as d
 
-class Tree:
+class Tree(abc.ABC):
 
+    @abc.abstractmethod
     def root(self):
         pass
 
+    @abc.abstractmethod
     def hive(self):
         pass
 
+    @abc.abstractmethod
     def node(self):
         pass
 
+    @abc.abstractmethod
     def children(self):
         pass
 
+    @abc.abstractmethod
     def is_leaf(self):
         pass
 
