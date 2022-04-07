@@ -8,7 +8,7 @@ repl/s path &rest {
   N RET down child
   ..    up
   ! S   sto
-  < S   rcl
+  @ S   rcl
   / S   seek
   : S   seek*
 }
@@ -114,6 +114,54 @@ class Treewalk():
         a = f'path: {self.path}'
         b = f'-----'
         return '\n'.join([a,b])
+
+def wepl(treewalk):
+    '''
+    .     show node
+    N RET down child
+    ..    up
+    ! S   sto
+    @ S   rcl
+    / S   seek
+    : S   seek*
+    '''
+    while True:
+        print(treewalk)
+        ans = input("> ")
+        if ans == ".":
+            print(treewalk.top())
+        if ans == ",":
+            for i,n in enumerate(treewalk.top().children()):
+                print(i,n)
+        elif ans.isdigit():
+            n = int(ans)
+            c = treewalk.top().children()[n]
+            treewalk.down(c)
+        elif ans == "q":
+            break
+        elif ans == "r":
+            treewalk.rst()
+            print('soft reset')
+        elif ans == "rr":
+            treewalk.rst(mem_too=True)
+            print('hard reset')
+        elif ans == "..":
+            c = treewalk.up()
+            print(c)
+        elif ans == "!":
+            print('TODO sto "..."')
+            name = '...'
+            treewalk.sto(name)
+        elif ans == "@":
+            print('TODO rcl "..."')
+            name = '...'
+            treewalk.rcl(name)
+        elif ans == "/ S":
+            print('TODO', 'search first')
+        elif ans == ": S":
+            print('TODO', 'search all')
+        else:
+            print(ans, '?')
 
 DEBUG = True
 
