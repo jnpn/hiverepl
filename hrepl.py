@@ -1,4 +1,8 @@
-'''
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+'''hrepl.py -- repl over hivex (Windows Registry) to navigate NTUSER.DAT and other hive files.
+
 tree { node ; children ; leaf? }
 
 dfs , bfs
@@ -12,7 +16,20 @@ repl/s path &rest {
   / S   seek
   : S   seek*
 }
+
+End.
 '''
+
+__author__ = "Johan Ponin"
+__copyright__ = "Copyright 2022-, jnpn"
+__credits__ = ["Johan Ponin"]
+__license__ = "GPLv3"
+__version__ = "0.0.1a0"
+__maintainer__ = "Johan Ponin"
+__email__ = "johan.ponin.pro@gmail.com"
+__status__ = "Alpha"
+
+
 import abc
 import hivex
 import datetime as d
