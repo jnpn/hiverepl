@@ -22,7 +22,8 @@ def debug(o):
     if DEBUG:
         print(o)
 
-H = hivex.Hivex("/media/noob/ACER320/Users/ACER/NTUSER.DAT")
+HIVEFN = "/media/noob/ACER320/Users/ACER/NTUSER.DAT"
+H = hivex.Hivex(HIVEFN)
 
 def root():
     return H.root()
