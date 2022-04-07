@@ -16,6 +16,65 @@ repl/s path &rest {
 import hivex
 import datetime as d
 
+class Tree:
+
+    def root(self):
+        pass
+
+    def hive(self):
+        pass
+
+    def node(self):
+        pass
+
+    def children(self):
+        pass
+
+    def is_leaf(self):
+        pass
+
+def unroot(fn):
+    hive = hivex.Hivex(fn)
+    root = Node(hive.root(), hive)
+    return root
+
+class Node(Tree):
+
+    def __init__(self, inode, hive):
+        super().__init__()
+        self.inode = inode
+        self.HIVE = hive
+
+    def hive(self):
+        return self.HIVE
+
+    def root(self):
+        return self.hive().root()
+
+    def node(self):
+        return self.inode
+
+    def children(self):
+        H = self.hive()
+        return [Node(n, self.hive()) for n in H.node_children(self.node())]
+
+    # predicates
+
+    def is_leaf(self):
+        return len(self.children()) == 0
+
+    def is_root(self):
+        return self.node() == self.root()
+
+    # display
+
+    def __repr__(self):
+        # name, leaf|node[, type, value]
+        name = self.hive().node_name(self.node())
+        num = self.node()
+        kind = '.' if self.is_leaf() else ''
+        return f'{name} {num}{kind}'
+
 DEBUG = True
 
 def debug(o):
