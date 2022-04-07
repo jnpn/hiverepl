@@ -80,6 +80,41 @@ class Node(Tree):
         kind = '.' if self.is_leaf() else ''
         return f'{name} {num}{kind}'
 
+class Treewalk():
+    def __init__(self, tree):
+        self.tree = tree
+        self.path = [tree]
+        self.mem = {}
+
+    def top(self):
+        if len(self.path) > 0:
+            return self.path[-1]
+
+    def rst(self, mem_too=False):
+        self.path = [self.tree]
+        if mem_too:
+            self.meme = {}
+
+    def up(self):
+        if len(self.path) > 0:
+            return self.path.pop()
+
+    def down(self, node):
+        self.path.append(node)
+
+    def sto(self, name):
+        self.mem[name] = self.path[:]
+        self.rst()
+
+    def rcl(self, name):
+        if name in self.mem:
+            self.path = self.mem[name][:]
+
+    def __repr__(self):
+        a = f'path: {self.path}'
+        b = f'-----'
+        return '\n'.join([a,b])
+
 DEBUG = True
 
 def debug(o):
