@@ -1,0 +1,14 @@
+#+TITLE: hiverepl: hivex repl
+#+AUTHOR: jnpn
+#+CREATOR: jnpn
+#+DATE: Fri 08 Apr 2022 12:21:48 AM CEST
+#+EMAIL: johan.ponin.pro@gmail.com
+#+LANGUAGE: fr
+
+* hivex (windows registry hive files library)
+* DONE object layer
+* DONE repl navigator
+* DONE xml serialization
+* TODO sizzle like finder
+* subtree extractor
+* comparator
