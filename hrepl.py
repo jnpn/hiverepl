@@ -3,12 +3,23 @@
 
 '''hrepl.py -- repl over hivex (Windows Registry) to navigate NTUSER.DAT and other hive files.
 
-tree { node ; children ; leaf? }
+Classes:
+
+tree { ...}
+
+node { node ; children ; leaf? }
+
+value { ... }
+
+Search:
 
 dfs , bfs
 
+REPL Interface:
+
 repl/s path &rest {
   .     show node
+  ,     show children
   N RET down child
   ..    up
   ! S   sto
@@ -52,9 +63,40 @@ class Tree(abc.ABC):
     def children(self):
         pass
 
+    def dfs(self):
+        yield self
+        for c in self.children():
+            yield from c.dfs()
+
     @abc.abstractmethod
     def is_leaf(self):
         pass
+
+def take(iterator, n=10):
+    while n:
+        yield next(iterator)
+        n -= 1
+
+def find(tree, pred):
+    '''
+    import re
+    import pprint
+    >>> pprint.pprint(list(find(r, lambda n: re.match('oo', repr(n)))))
+    '''
+    return (n for n in tree.dfs() if pred(n))
+
+
+def path(tree, seq):
+    '''
+    >>> path(tree, []) == tree
+    >>> path(tree, [9]) == tree.children()[9]
+    '''
+    if seq:
+        c = tree.children()
+        a,*b = seq
+        return path(c[a], b)
+    else:
+        return tree
 
 def unroot(fn):
     hive = hivex.Hivex(fn)
@@ -80,9 +122,13 @@ class Node(Tree):
     def from_inode(self, inode):
         return Node(inode, self.hive())
 
+    def values(self):
+        H = self.hive()
+        return [Value(v, H) for v in H.node_values(self.node())]
+
     def children(self):
         H = self.hive()
-        return [Node(n, self.hive()) for n in H.node_children(self.node())]
+        return [Node(n, H) for n in H.node_children(self.node())]
 
     # predicates
 
@@ -91,6 +137,12 @@ class Node(Tree):
 
     def is_root(self):
         return self.node() == self.root()
+
+    def leaf(self):
+        if self.is_leaf():
+            h = self.hive()
+            n = self.node()
+            return h.value_type(n)
 
     # display
 
@@ -102,6 +154,17 @@ class Node(Tree):
         num = self.node()
         kind = '.' if self.is_leaf() else ''
         return f'{name} {num}{kind}'
+
+class Value():
+    def __init__(self, value, hive):
+        self.value = value
+        self.hive = hive
+
+    def __repr__(self):
+        name = self.hive.value_key(self.value)
+        type_ = '?' # self.hive.value_type(self.value)
+        value = self.hive.value_value(self.value)
+        return f'{name}::{type_} = {value}'
 
 class Treewalk():
     def __init__(self, tree):
@@ -141,6 +204,7 @@ class Treewalk():
 def wepl(treewalk):
     '''
     .     show node
+    ,     show children
     N RET down child
     ..    up
     ! S   sto
@@ -200,3 +264,11 @@ def main():
     r = unroot(HIVEFN)
     t = Treewalk(r)
     wepl(t)
+
+############################## TEST
+
+def test():
+    r = unroot(HIVEFN)
+    import ser
+    x = ser.xml(r)
+    return r,x
